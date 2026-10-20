@@ -1,8 +1,15 @@
-import { defineConfig } from 'astro/config';
-import react from '@astrojs/react';
-import tailwind from '@astrojs/tailwind';
+import { defineConfig } from "astro/config";
+import react from "@astrojs/react";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  integrations: [react(), tailwind()],
-  vite: { server: { proxy: { '/api': 'http://localhost:4000' } } },
+  integrations: [react()],
+  vite: {
+    plugins: [tailwindcss()],
+    server: {
+      proxy: {
+        "/api": "http://localhost:4000",
+      },
+    },
+  },
 });
