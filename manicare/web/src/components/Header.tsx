@@ -17,8 +17,8 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
   useEffect(() => {
-    document.body.style.overflow = menu ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    document.documentElement.style.overflow = menu ? 'hidden' : '';
+    return () => { document.documentElement.style.overflow = ''; };
   }, [menu]);
 
   return (

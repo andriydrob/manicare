@@ -7,7 +7,7 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden px-5 pb-16 pt-28 sm:px-6 lg:flex lg:min-h-screen lg:items-center lg:pt-32">
+    <section id="top" className="relative overflow-hidden px-5 pb-16 pt-28 sm:px-6 lg:flex lg:min-h-[100svh] lg:items-center lg:pt-32">
       <div className="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[1.15fr_1fr]">
         <div>
           <h1 className="font-serif text-[3.2rem] font-normal leading-[1] sm:text-7xl lg:text-8xl">
@@ -32,7 +32,7 @@ export default function Hero() {
         <motion.div className="relative mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-md"
           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2, delay: 0.4, ease }}>
           <div aria-hidden className="absolute inset-0 translate-x-4 translate-y-4 rounded-t-full border border-beige" />
-          {/* Покласти фото салону в \ web/public/salon.jpg\ */}
+          {/* Покладіть своє фото у web/public/salon.jpg, воно підставиться в арку автоматично */}
           <PhotoSlot src="/salon.jpg" alt="Інтер’єр салону Manicare" className="aspect-[3/4] rounded-t-full bg-sand">
             <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-beige/70 to-transparent" />
             <p className="absolute inset-x-8 bottom-10 text-center font-serif text-xl italic text-cinnamon">Фото салону<span className="mt-1 block font-sans text-xs not-italic">public/salon.jpg</span></p>

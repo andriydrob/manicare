@@ -43,3 +43,7 @@ export const reviews = [
   { name: 'Вікторія Л.', service: 'Нарощування вій', rating: 5, text: 'Вії легкі, без відчуття ваги. Софія детально пояснила, як їх доглядати.' },
   { name: 'Олеся М.', service: 'Педикюр', rating: 4, text: 'Дуже спокійна атмосфера й акуратна робота. Єдине, що хочеться: більше вечірніх вікон.' },
 ];
+
+export const shortTitle: Record<ServiceId, string> = {
+  manicure: 'Манікюр', pedicure: 'Педикюр', 'nail-extensions': 'Нарощування нігтів', 'lash-extensions': 'Вії', brows: 'Брови',
+};
