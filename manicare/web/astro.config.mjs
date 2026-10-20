@@ -6,5 +6,5 @@ import tailwind from '@astrojs/tailwind';
 // у продакшені сайт звертається до адреси з PUBLIC_API_URL.
 export default defineConfig({
   integrations: [react(), tailwind()],
-  vite: { server: { proxy: { '/api': 'http://localhost:4000' } } },
+     vite: { server: { proxy: { '/api': 'http://127.0.0.1:4000' } } },
 });
