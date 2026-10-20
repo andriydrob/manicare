@@ -8,7 +8,7 @@ type Status = 'FULL' | 'AVAILABLE';
 type Step = 'date' | 'time' | 'details' | 'done';
 interface MasterSlots { masterId: string; name: string; role: string; times: string[] }
 
-const API = (import.meta.env.PUBLIC_API_URL as string | undefined) ?? '';
+const API = ((import.meta.env.PUBLIC_API_URL as string | undefined) ?? '').replace(/\/+$/, '');
 const MONTHS = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'];
 const WEEKDAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -17,9 +17,9 @@ const startOfMonth = (d = new Date()) => new Date(d.getFullYear(), d.getMonth(),
 const prettyDate = (s: string) => new Date(`${s}T12:00:00`).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', weekday: 'long' });
 
 async function api<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API}${path}`, init);
-  const body = await res.json().catch(() => ({}));
-  if (!res.ok) throw Object.assign(new Error(body.error ?? 'Не вдалося виконати запит'), { status: res.status });
+  const res = await fetch(`${API}${path}`, init).catch(() => { throw new Error('Немає зв’язку із сервером запису. Спробуйте ще раз.'); });
+  const body = await res.json().catch(() => null);
+  if (!res.ok || body === null) throw Object.assign(new Error(body?.error ?? `Сервер запису недоступний (код ${res.status}). Перевірте PUBLIC_API_URL.`), { status: res.status });
   return body as T;
 }
 
@@ -62,10 +62,10 @@ export default function Booking() {
 
   useEffect(() => {
     if (!open) return;
-    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && close();
     window.addEventListener('keydown', onKey);
-    return () => { document.body.style.overflow = ''; window.removeEventListener('keydown', onKey); };
+    return () => { document.documentElement.style.overflow = ''; window.removeEventListener('keydown', onKey); };
   }, [open, close]);
 
   useEffect(() => {
@@ -108,6 +108,7 @@ export default function Booking() {
     } finally { setLoading(false); }
   };
 
+  // Calendar grid (Monday first)
   const offset = (cursor.getDay() + 6) % 7;
   const total = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
   const cells = [...Array(offset).fill(null), ...Array.from({ length: total }, (_, i) => i + 1)];
@@ -120,7 +121,7 @@ export default function Booking() {
   return (
     <AnimatePresence>
       {open && (
-        <motion.div key="calendar" className="fixed inset-0 z-50 flex items-end justify-center bg-espresso/60 backdrop-blur-sm sm:items-center sm:p-6"
+        <motion.div key="calendar" className="fixed inset-0 z-50 flex items-end justify-center bg-espresso/60 sm:items-center sm:p-6"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onMouseDown={(e) => e.target === e.currentTarget && close()}>
           <motion.div role="dialog" aria-modal="true" aria-label="Онлайн-запис"
             className="relative max-h-[92vh] w-full max-w-xl overflow-y-auto bg-cream p-6 sm:p-10"
@@ -163,7 +164,7 @@ export default function Booking() {
                           aria-label={`${day} ${MONTHS[cursor.getMonth()]}: ${free ? 'є вільні віконця' : 'всі місця зайняті'}`}
                           className={`aspect-square rounded-full border text-sm ${free
                             ? 'border-[#B9D1B4] bg-[#E4EEE0] text-[#2F5D3A]'
-                            : 'cursor-not-allowed border-[#E6C4BE] bg-[#F4DEDA] text-[#9A3B30]'}`}>
+                            : days[key] === 'FULL' ? 'cursor-not-allowed border-[#E6C4BE] bg-[#F4DEDA] text-[#9A3B30]' : 'cursor-not-allowed border-sand bg-sand/40 text-beige'}`}>
                           {day}
                         </motion.button>
                       );
@@ -183,7 +184,7 @@ export default function Booking() {
       )}
 
       {open && step !== 'date' && (
-        <motion.div key="details-modal" className="fixed inset-0 z-[60] flex items-end justify-center bg-espresso/50 backdrop-blur-md sm:items-center sm:p-6"
+        <motion.div key="details-modal" className="fixed inset-0 z-[60] flex items-end justify-center bg-espresso/50 sm:items-center sm:p-6"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           onMouseDown={(e) => e.target === e.currentTarget && (step === 'done' ? close() : back())}>
           <motion.div role="dialog" aria-modal="true" aria-label="Деталі запису"
