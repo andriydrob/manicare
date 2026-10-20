@@ -22,9 +22,9 @@ app.get('/api/booking/masters-slots', async (req, reply) => {
 
 app.post('/api/booking/confirm', async (req, reply) => send(reply, createBooking((req.body ?? {}) as Record<string, unknown>)));
 
-const port = Number(process.env.PORT ?? 4000);
-if (process.env.VERCEL) {
-  await app.ready();
-} else {
+if (!process.env.VERCEL) {
+  const port = Number(process.env.PORT ?? 4000);
   await app.listen({ port, host: '0.0.0.0' });
 }
+
+export default app;
