@@ -3,7 +3,13 @@ import cors from '@fastify/cors';
 import { createBooking, getAvailability, getSlots, type Result } from './booking.js';
 
 const app = Fastify({ logger: true });
-await app.register(cors, { origin: process.env.CORS_ORIGIN ?? true });
+
+const corsOrigin = process.env.CORS_ORIGIN || true;
+await app.register(cors, { 
+  origin: corsOrigin,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
+});
 
 const send = (reply: FastifyReply, r: Result) => reply.code(r.status).send(r.body);
 type Q = Record<string, string | undefined>;
