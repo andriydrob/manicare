@@ -1,0 +1,44 @@
+---
+---
+
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Адмін</title>
+  </head>
+  <body class="min-h-screen bg-[#0f0f0f] text-white font-sans p-10">
+    <h1 class="text-2xl font-semibold mb-2">Адмін панель</h1>
+    <p id="status" class="text-[#aaa]">Завантаження...</p>
+
+    <script>
+      async function checkAuth() {
+        const token = sessionStorage.getItem('admin_token')
+
+        if (!token) {
+          window.location.href = '/adminmanicare'
+          return
+        }
+
+        try {
+          const res = await fetch('/api/auth/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token }),
+          })
+          const data = await res.json()
+
+          if (!data.ok) {
+            sessionStorage.removeItem('admin_token')
+            window.location.href = '/adminmanicare'
+          } else {
+            document.getElementById('status')!.textContent = 'Ласкаво просимо!'
+          }
+        } catch {
+          window.location.href = '/adminmanicare'
+        }
+      }
+
+      checkAuth()
+    </script>
+  </body>
+</html>

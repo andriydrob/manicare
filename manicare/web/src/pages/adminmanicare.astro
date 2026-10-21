@@ -1,0 +1,78 @@
+---
+---
+
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Вхід</title>
+  </head>
+  <body class="min-h-screen flex items-center justify-center bg-[#0f0f0f]">
+    <div class="w-full max-w-sm bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-10">
+      <h1 class="text-white text-xl font-semibold text-center mb-6">Адмін панель</h1>
+
+      <label class="text-[#aaa] text-sm block mb-1.5" for="login">Логін</label>
+      <input
+        id="login"
+        type="text"
+        autocomplete="username"
+        class="w-full bg-[#111] border border-[#333] rounded-lg px-3.5 py-2.5 text-white text-sm mb-4 outline-none focus:border-[#666] transition-colors"
+      />
+
+      <label class="text-[#aaa] text-sm block mb-1.5" for="password">Пароль</label>
+      <input
+        id="password"
+        type="password"
+        autocomplete="current-password"
+        class="w-full bg-[#111] border border-[#333] rounded-lg px-3.5 py-2.5 text-white text-sm mb-5 outline-none focus:border-[#666] transition-colors"
+      />
+
+      <button
+        id="btn"
+        class="w-full py-2.5 bg-white text-black font-semibold rounded-lg text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+      >
+        Увійти
+      </button>
+
+      <p id="error" class="text-red-400 text-sm text-center mt-3 min-h-[18px]"></p>
+    </div>
+
+    <script>
+const btn = document.getElementById('btn') as HTMLButtonElement
+      const errorEl = document.getElementById('error') as HTMLDivElement
+
+      btn.addEventListener('click', async () => {
+        const login = (document.getElementById('login') as HTMLInputElement).value.trim()
+        const password = (document.getElementById('password') as HTMLInputElement).value
+
+        if (!login || !password) {
+          errorEl.textContent = 'Заповніть всі поля'
+          return
+        }
+
+        btn.disabled = true
+        errorEl.textContent = ''
+
+        try {
+          const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ login, password }),
+          })
+          const data = await res.json()
+
+          if (data.ok && data.token) {
+            sessionStorage.setItem('admin_token', data.token)
+            window.location.href = '/admin'
+          } else {
+            errorEl.textContent = data.message || 'Помилка входу'
+          }
+        } catch {
+          errorEl.textContent = 'Помилка зʼєднання з сервером'
+        } finally {
+          btn.disabled = false
+        }
+      })
+    </script>
+  </body>
+</html>

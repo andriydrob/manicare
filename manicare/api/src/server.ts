@@ -1,6 +1,7 @@
 import Fastify, { type FastifyReply } from 'fastify';
 import cors from '@fastify/cors';
 import { createBooking, getAvailability, getSlots, type Result } from './booking.js';
+import { authRoutes } from './auth.js';
 
 const app = Fastify({ logger: true });
 
@@ -27,6 +28,9 @@ app.get('/api/booking/masters-slots', async (req, reply) => {
 });
 
 app.post('/api/booking/confirm', async (req, reply) => send(reply, createBooking((req.body ?? {}) as Record<string, unknown>)));
+
+// AUTH маршрути
+await app.register(authRoutes, { prefix: '/api' });
 
 if (!process.env.VERCEL) {
   const port = Number(process.env.PORT ?? 4000);
