@@ -37,42 +37,45 @@
       <p id="error" class="text-red-400 text-sm text-center mt-3 min-h-[18px]"></p>
     </div>
 
-    <script>
-const btn = document.getElementById('btn') as HTMLButtonElement
-      const errorEl = document.getElementById('error') as HTMLDivElement
+<script>
+  const API_URL = import.meta.env.PUBLIC_API_URL || ''
 
-      btn.addEventListener('click', async () => {
-        const login = (document.getElementById('login') as HTMLInputElement).value.trim()
-        const password = (document.getElementById('password') as HTMLInputElement).value
+  const btn = document.getElementById('btn') as HTMLButtonElement
+  const errorEl = document.getElementById('error') as HTMLElement
 
-        if (!login || !password) {
-          errorEl.textContent = 'Заповніть всі поля'
-          return
-        }
+  btn.addEventListener('click', async () => {
+    const login = (document.getElementById('login') as HTMLInputElement).value.trim()
+    const password = (document.getElementById('password') as HTMLInputElement).value
 
-        btn.disabled = true
-        errorEl.textContent = ''
+    if (!login || !password) {
+      errorEl.textContent = 'Заповніть всі поля'
+      return
+    }
 
-        try {
-          const res = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ login, password }),
-          })
-          const data = await res.json()
+    btn.disabled = true
+    errorEl.textContent = ''
 
-          if (data.ok && data.token) {
-            sessionStorage.setItem('admin_token', data.token)
-            window.location.href = '/admin'
-          } else {
-            errorEl.textContent = data.message || 'Помилка входу'
-          }
-        } catch {
-          errorEl.textContent = 'Помилка зʼєднання з сервером'
-        } finally {
-          btn.disabled = false
-        }
+    try {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ login, password }),
       })
-    </script>
+      const data = await res.json()
+
+      if (data.ok && data.token) {
+        sessionStorage.setItem('admin_token', data.token)
+        window.location.href = '/admin'
+      } else {
+        errorEl.textContent = data.message || 'Помилка входу'
+      }
+    } catch (err) {
+      console.error(err)
+      errorEl.textContent = 'Помилка зʼєднання з сервером'
+    } finally {
+      btn.disabled = false
+    }
+  })
+</script>
   </body>
 </html>
