@@ -1,0 +1,28 @@
+---
+import { Clock, Facebook, Instagram, MapPin, Phone, Send } from 'lucide-react';
+const socials = [
+  { href: 'https://instagram.com', label: 'Instagram', Icon: Instagram },
+  { href: 'https://t.me', label: 'Telegram', Icon: Send },
+  { href: 'https://facebook.com', label: 'Facebook', Icon: Facebook },
+];
+---
+<footer id="contacts" class="bg-espresso text-sand">
+  <div class="mx-auto grid max-w-7xl gap-14 px-6 py-20 lg:grid-cols-[1fr_1fr_1.2fr]">
+    <div>
+      <p class="font-serif text-3xl tracking-[0.28em] text-cream">MANICARE</p>
+      <p class="mt-5 max-w-xs leading-relaxed text-beige">Салон краси для тих, хто цінує деталі, тишу та результат, який тримається.</p>
+      <div class="mt-8 flex gap-3">
+        {socials.map(({ href, label, Icon }) => (
+          <a href={href} aria-label={label} class="rounded-full border border-cinnamon p-3 transition-colors hover:bg-cream hover:text-espresso"><Icon size={18} /></a>
+        ))}
+      </div>
+    </div>
+    <ul class="space-y-5 text-sm">
+      <li class="flex gap-3"><MapPin size={18} className="mt-0.5 shrink-0 text-beige" />м. Київ, вул. Василя Липківського, 8 </li>
+      <li class="flex gap-3"><Phone size={18} className="mt-0.5 shrink-0 text-beige" /><a href="tel:+380000000000" class="hover:text-cream">+38 (000) 000 00 00</a></li>
+      <li class="flex gap-3"><Clock size={18} className="mt-0.5 shrink-0 text-beige" />Вт–Нд: 10:00–21:00<br />Пн: вихідний</li>
+    </ul>
+    <div class="flex aspect-[16/10] items-center justify-center border border-cinnamon bg-[#352725] text-sm text-beige">Тут буде карта Google Maps</div>
+  </div>
+  <p class="border-t border-cinnamon/40 py-6 text-center text-xs text-beige">© {new Date().getFullYear()} Manicare. Усі права захищено.</p>
+</footer>
