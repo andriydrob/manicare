@@ -2,11 +2,11 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "services": {
     "api": {
-      "root": "manicare/api",
+      "root": "api",
       "framework": "fastify"
     },
     "web": {
-      "root": "manicare/web",
+      "root": "web",
       "framework": "astro"
     }
   },
