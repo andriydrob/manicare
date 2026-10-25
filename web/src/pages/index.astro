@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header';
+import Hero from '../components/Hero';
+import Services from '../components/Services';
+import Team from '../components/Team';
+import Reviews from '../components/Reviews';
+import Booking from '../components/Booking';
+import FloatingPhone from '../components/FloatingPhone';
+import Footer from '../components/Footer.astro';
+---
+<Layout>
+  <Header client:load />
+  <main>
+    <Hero client:load />
+    <Services client:visible />
+    <section id="about" class="bg-espresso text-sand">
+      <div class="mx-auto grid max-w-7xl gap-12 px-6 py-28 lg:grid-cols-2">
+        <h2 class="font-serif text-5xl leading-tight text-cream sm:text-6xl">Простір, де нікуди поспішати</h2>
+        <div class="space-y-6 text-lg leading-relaxed">
+          <p>Manicare створений для догляду без метушні. Ми працюємо за попереднім записом, тож кожна гостя отримує повну увагу майстра і стільки часу, скільки потрібно.</p>
+          <p>Стерильні інструменти, якісні матеріали та спокійна атмосфера. Результат, який виглядає природно та тримається довго.</p>
+        </div>
+      </div>
+    </section>
+    <Team client:visible />
+    <Reviews client:visible />
+  </main>
+  <Footer />
+  <FloatingPhone client:load />
+  <Booking client:load />
+</Layout>

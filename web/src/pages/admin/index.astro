@@ -1,0 +1,29 @@
+---
+import AdminPanel from '../../components/AdminPanel.tsx'
+---
+
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Адмін панель — Manicare</title>
+  </head>
+  <body class="bg-[#0f0f0f]">
+    <div id="auth-check" class="min-h-screen flex items-center justify-center">
+      <p class="text-[#aaa] text-sm">Перевірка доступу...</p>
+    </div>
+    <div id="panel" class="hidden">
+      <AdminPanel client:only="react" />
+    </div>
+
+    <script>
+      const token = sessionStorage.getItem('admin_token')
+      if (!token) {
+        window.location.href = '/adminmanicare'
+      } else {
+        document.getElementById('auth-check')!.style.display = 'none'
+        document.getElementById('panel')!.classList.remove('hidden')
+      }
+    </script>
+  </body>
+</html>
