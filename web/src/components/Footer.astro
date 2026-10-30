@@ -19,10 +19,29 @@ const socials = [
     </div>
     <ul class="space-y-5 text-sm">
       <li class="flex gap-3"><MapPin size={18} className="mt-0.5 shrink-0 text-beige" />м. Київ, вул. Василя Липківського, 8 </li>
-      <li class="flex gap-3"><Phone size={18} className="mt-0.5 shrink-0 text-beige" /><a href="tel:+380000000000" class="hover:text-cream">+38 (000) 000 00 00</a></li>
+      <li class="flex gap-3"><Phone size={18} className="mt-0.5 shrink-0 text-beige" /><a href="tel:+380739009073" class="hover:text-cream">+38 (073) 900 90 73</a></li>
       <li class="flex gap-3"><Clock size={18} className="mt-0.5 shrink-0 text-beige" />Вт–Нд: 10:00–21:00<br />Пн: вихідний</li>
     </ul>
-    <div class="flex aspect-[16/10] items-center justify-center border border-cinnamon bg-[#352725] text-sm text-beige">Тут буде карта Google Maps</div>
+    <div class="group relative aspect-[16/10] overflow-hidden rounded-3xl border border-cinnamon/60 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.6)]">
+  <iframe
+    title="Manicare на карті"
+    src="https://maps.google.com/maps?q=%D0%9A%D0%B8%D1%97%D0%B2%2C%20%D0%B2%D1%83%D0%BB.%20%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D1%8F%20%D0%9B%D0%B8%D0%BF%D0%BA%D1%96%D0%B2%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE%2C%208&t=&z=16&ie=UTF8&iwloc=&output=embed"
+    class="h-full w-full border-0 grayscale-[0.55] sepia-[0.25] contrast-[0.95] transition duration-500 group-hover:grayscale-0 group-hover:sepia-0"
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    allowfullscreen
+  ></iframe>
+
+  <a
+    href="https://www.google.com/maps/search/?api=1&query=%D0%9A%D0%B8%D1%97%D0%B2%2C%20%D0%B2%D1%83%D0%BB.%20%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D1%8F%20%D0%9B%D0%B8%D0%BF%D0%BA%D1%96%D0%B2%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE%2C%208"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-cream px-4 py-2 text-xs font-medium tracking-wide text-espresso shadow-lg transition-colors hover:bg-sand"
+  >
+    <MapPin size={14} />
+    Прокласти маршрут
+  </a>
+</div>
   </div>
   <p class="border-t border-cinnamon/40 py-6 text-center text-xs text-beige">© {new Date().getFullYear()} Manicare. Усі права захищено.</p>
 </footer>

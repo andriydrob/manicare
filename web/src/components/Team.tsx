@@ -68,8 +68,31 @@ function MasterCard({ m, i }: { m: Master; i: number }) {
   );
 }
 
+function MasterSkeleton() {
+  return (
+    <article className="flex h-full animate-pulse flex-col bg-cream">
+      <div className="aspect-[4/5] bg-sand" />
+      <div className="flex flex-1 flex-col p-6">
+        <div className="h-7 w-2/3 rounded bg-sand" />
+        <div className="mt-2 h-4 w-1/2 rounded bg-sand/70" />
+        <div className="mt-5 space-y-2">
+          <div className="h-3 w-full rounded bg-sand/70" />
+          <div className="h-3 w-full rounded bg-sand/70" />
+          <div className="h-3 w-3/4 rounded bg-sand/70" />
+        </div>
+        <div className="mt-5 flex gap-2">
+          <div className="h-6 w-20 rounded-full bg-sand/70" />
+          <div className="h-6 w-24 rounded-full bg-sand/70" />
+        </div>
+        <div className="mt-6 h-11 w-full rounded-full bg-sand/70" />
+      </div>
+    </article>
+  );
+}
+
 export default function Team() {
   const [masters, setMasters] = useState<Master[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch(`${API_URL}/api/admin/masters`)
@@ -77,19 +100,9 @@ export default function Team() {
       .then((data) => {
         if (data.ok) setMasters(data.data);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
-
-  if (masters.length === 0)
-    return (
-      <section id="team" className="bg-sand/50 py-20 md:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-6">
-          <h2 className="max-w-xl font-serif text-4xl leading-tight sm:text-6xl">
-            Майстри, яким довіряють руки й погляд
-          </h2>
-        </div>
-      </section>
-    );
 
   return (
     <section id="team" className="bg-sand/50 py-20 md:py-28">
@@ -97,20 +110,36 @@ export default function Team() {
         <h2 className="max-w-xl font-serif text-4xl leading-tight sm:text-6xl">
           Майстри, яким довіряють руки й погляд
         </h2>
-        <SnapSlider
-          items={masters}
-          getId={(m) => m.id}
-          getLabel={(m) => m.name.split(" ")[0]}
-          layoutKey="team-tab"
-          render={(m, i) => <MasterCard m={m} i={i} />}
-        />
-        <div className="mt-14 hidden gap-6 md:grid md:grid-cols-2 lg:grid-cols-3">
-          {masters.map((m, i) => (
-            <div key={m.id} className="overflow-hidden">
-              <MasterCard m={m} i={i} />
+
+        {loading ? (
+          <>
+            <div className="mt-10 md:hidden">
+              <MasterSkeleton />
             </div>
-          ))}
-        </div>
+            <div className="mt-14 hidden gap-6 md:grid md:grid-cols-2 lg:grid-cols-3">
+              {[0, 1, 2].map((i) => (
+                <MasterSkeleton key={i} />
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <SnapSlider
+              items={masters}
+              getId={(m) => m.id}
+              getLabel={(m) => m.name.split(" ")[0]}
+              layoutKey="team-tab"
+              render={(m, i) => <MasterCard m={m} i={i} />}
+            />
+            <div className="mt-14 hidden gap-6 md:grid md:grid-cols-2 lg:grid-cols-3">
+              {masters.map((m, i) => (
+                <div key={m.id} className="overflow-hidden">
+                  <MasterCard m={m} i={i} />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

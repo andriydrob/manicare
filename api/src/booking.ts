@@ -24,7 +24,7 @@ export async function getAvailability(month: string | null, serviceId: string | 
   if (!m || +m[2] < 1 || +m[2] > 12) return out(400, { error: 'month має бути у форматі YYYY-MM' })
   if (serviceId && !isService(serviceId)) return out(400, { error: 'Невідома послуга' })
 
-  const { today } = kyivNow()
+const { today, time: nowTime } = kyivNow()
   const total = new Date(Date.UTC(+m[1], +m[2], 0)).getUTCDate()
 
   // Отримуємо майстрів з Supabase
@@ -40,7 +40,7 @@ export async function getAvailability(month: string | null, serviceId: string | 
   // Отримуємо всі вільні слоти за місяць
   const { data: slots } = await supabase
     .from('schedules')
-    .select('date, master_id, is_booked')
+    .select('date, time, master_id, is_booked')
     .in('master_id', masterIds)
     .gte('date', `${m[1]}-${m[2]}-01`)
     .lte('date', `${m[1]}-${m[2]}-${pad(total)}`)
@@ -48,7 +48,9 @@ export async function getAvailability(month: string | null, serviceId: string | 
   const days = Array.from({ length: total }, (_, i) => {
     const date = `${m[1]}-${m[2]}-${pad(i + 1)}`
     if (date < today) return { date, status: 'FULL' }
-    const hasAvailable = (slots || []).some(s => s.date === date && !s.is_booked)
+    const hasAvailable = (slots || []).some(
+      s => s.date === date && !s.is_booked && (date !== today || s.time > nowTime)
+    )
     return { date, status: hasAvailable ? 'AVAILABLE' : 'FULL' }
   })
 
@@ -111,6 +113,10 @@ export async function createBooking(body: Record<string, unknown>): Promise<Resu
     .single()
 
   if (!slot) return out(404, { error: 'Слот не знайдено' })
+  const { today, time: nowTime } = kyivNow()
+    if (date === today && (timeSlot as string) <= nowTime) {
+  return out(409, { error: 'Цей час уже минув. Оберіть інше вікно.' })
+}
   if (slot.is_booked) return out(409, { error: 'Цей час вже зайнятий. Оберіть інше вікно.' })
 
   // Перевіряємо майстра

@@ -14,6 +14,7 @@ interface Review {
 
 export default function Reviews() {
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
   const [[index, dir], setState] = useState<[number, number]>([0, 1]);
   const [paused, setPaused] = useState(false);
 
@@ -24,6 +25,7 @@ export default function Reviews() {
         if (data.ok && data.data.length > 0) setReviews(data.data)
       })
       .catch(() => {})
+      .finally(() => setLoading(false))
   }, [])
 
   const go = (d: number) => setState(([i]) => [(i + d + reviews.length) % reviews.length, d]);
@@ -33,6 +35,25 @@ export default function Reviews() {
     const t = setInterval(() => go(1), 7000);
     return () => clearInterval(t);
   }, [paused, reviews.length]);
+
+  if (loading) return (
+    <section id="reviews" className="mx-auto max-w-4xl px-6 py-28 text-center">
+      <h2 className="font-serif text-5xl sm:text-6xl">Що кажуть наші клієнтки</h2>
+      <div className="mt-14 min-h-[20rem] animate-pulse px-4">
+        <div className="flex justify-center gap-1">
+          {[0, 1, 2, 3, 4].map(i => (
+            <div key={i} className="h-[18px] w-[18px] rounded-full bg-sand" />
+          ))}
+        </div>
+        <div className="mx-auto mt-8 max-w-2xl space-y-3">
+          <div className="h-8 w-full rounded bg-sand" />
+          <div className="mx-auto h-8 w-5/6 rounded bg-sand" />
+          <div className="mx-auto h-8 w-2/3 rounded bg-sand" />
+        </div>
+        <div className="mx-auto mt-8 h-4 w-40 rounded bg-sand/70" />
+      </div>
+    </section>
+  );
 
   if (reviews.length === 0) return (
     <section className="mx-auto max-w-4xl px-6 py-28 text-center">

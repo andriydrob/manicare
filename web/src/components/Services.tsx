@@ -48,10 +48,16 @@ export default function Services() {
 
       <SnapSlider items={services} getId={(s) => s.id} getLabel={(s) => shortTitle[s.id]} layoutKey="services-tab" render={(s) => <Card s={s} />} />
 
-      <motion.div key={active} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.35 }}
-        className="mt-14 hidden gap-px overflow-hidden border border-sand bg-sand md:grid md:grid-cols-2 lg:grid-cols-3">
-        {list.map((s) => <article key={s.id}><Card s={s} /></article>)}
-      </motion.div>
+<motion.div key={active} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.35 }}
+  className="relative mt-14 hidden md:block">
+  <div className="flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    {list.map((s) => (
+      <article key={s.id} className="w-[360px] shrink-0 snap-start border border-sand bg-sand/0 lg:w-[400px]">
+        <Card s={s} />
+      </article>
+    ))}
+  </div>
+</motion.div>
     </section>
   );
 }

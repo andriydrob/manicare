@@ -5,11 +5,12 @@ import { randomUUID } from 'node:crypto'
 export async function adminRoutes(fastify: FastifyInstance) {
 
   // ===== МАЙСТРИ =====
-  fastify.get('/masters', async (_, reply) => {
-    const { data, error } = await supabase.from('masters').select('*').order('created_at')
-    if (error) return reply.code(500).send({ ok: false, message: error.message })
-    return reply.send({ ok: true, data })
-  })
+fastify.get('/masters', async (_, reply) => {
+  const { data, error } = await supabase.from('masters').select('*').order('created_at')
+  if (error) return reply.code(500).send({ ok: false, message: error.message })
+  reply.header('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300')
+  return reply.send({ ok: true, data })
+})
 
   fastify.post('/masters', async (req, reply) => {
     const body = req.body as any

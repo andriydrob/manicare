@@ -4,7 +4,7 @@ import { Phone } from 'lucide-react';
 export default function FloatingPhone() {
   const reduce = useReducedMotion();
   return (
-    <a href="tel:+380000000000" aria-label="Зателефонувати в Manicare"
+    <a href="tel:+380739009073" aria-label="Зателефонувати в Manicare"
       className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-espresso text-cream shadow-lg shadow-espresso/30">
       {!reduce && <>
         <motion.span aria-hidden className="absolute inset-0 rounded-full bg-espresso/40"
