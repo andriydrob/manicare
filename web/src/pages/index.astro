@@ -13,7 +13,7 @@ import Footer from '../components/Footer.astro';
   <Header client:load />
   <main>
     <Hero client:load />
-    <Services client:visible />
+    <Services client:load />
     <section id="about" class="bg-espresso text-sand">
       <div class="mx-auto grid max-w-7xl gap-12 px-6 py-28 lg:grid-cols-2">
         <h2 class="font-serif text-5xl leading-tight text-cream sm:text-6xl">Простір, де нікуди поспішати</h2>
@@ -23,8 +23,8 @@ import Footer from '../components/Footer.astro';
         </div>
       </div>
     </section>
-    <Team client:visible />
-    <Reviews client:visible />
+    <Team client:load />
+    <Reviews client:load />
   </main>
   <Footer />
   <FloatingPhone client:load />
