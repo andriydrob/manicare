@@ -33,6 +33,7 @@ export default function Booking() {
   const [step, setStep] = useState<Step>('date');
   const [serviceId, setServiceId] = useState<ServiceId>('manicure');
   const [lockedMaster, setLockedMaster] = useState<string | null>(null);
+  const [lockedServiceIds, setLockedServiceIds] = useState<ServiceId[] | null>(null);
   const [cursor, setCursor] = useState(startOfMonth());
   const [days, setDays] = useState<Record<string, Status>>({});
   const [date, setDate] = useState<string | null>(null);
@@ -48,14 +49,15 @@ export default function Booking() {
   const close = useCallback(() => setOpen(false), []);
 
   useEffect(() => {
-    const onOpen = (e: Event) => {
-      const d = (e as CustomEvent<BookingIntent>).detail ?? {};
-      setServiceId(d.serviceId ?? 'manicure');
-      setLockedMaster(d.masterId ?? null);
-      setStep('date'); setDate(null); setTime(null); setMasterId(null); setError(null);
-      setCursor(startOfMonth());
-      setOpen(true);
-    };
+const onOpen = (e: Event) => {
+  const d = (e as CustomEvent<BookingIntent>).detail ?? {};
+  setServiceId(d.serviceId ?? 'manicure');
+  setLockedMaster(d.masterId ?? null);
+  setLockedServiceIds(d.serviceIds ?? null);
+  setStep('date'); setDate(null); setTime(null); setMasterId(null); setError(null);
+  setCursor(startOfMonth());
+  setOpen(true);
+};
     window.addEventListener(BOOKING_EVENT, onOpen);
     return () => window.removeEventListener(BOOKING_EVENT, onOpen);
   }, []);
@@ -115,7 +117,7 @@ export default function Booking() {
   const isCurrentMonth = monthKey(cursor) === monthKey(new Date());
   const current = options.find((o) => o.masterId === masterId);
   const service = services.find((s) => s.id === serviceId)!;
-  const masterName = team.find((m) => m.id === masterId)?.name ?? current?.name;
+  const masterName = current?.name;
   const back = () => { setError(null); setStep(step === 'details' ? 'time' : 'date'); };
 
   return (
@@ -136,8 +138,8 @@ export default function Booking() {
                   <label className="text-sm text-cinnamon" htmlFor="svc">Послуга</label>
                   <select id="svc" value={serviceId} onChange={(e) => setServiceId(e.target.value as ServiceId)}
                     className="mt-2 w-full border border-sand bg-transparent px-4 py-3">
-                    {services.filter((s) => !lockedMaster || team.find((m) => m.id === lockedMaster)?.serviceIds.includes(s.id))
-                      .map((s) => <option key={s.id} value={s.id}>{s.title}, {s.price}</option>)}
+{services.filter((s) => !lockedServiceIds || lockedServiceIds.includes(s.id))
+  .map((s) => <option key={s.id} value={s.id}>{s.title}, {s.price}</option>)}
                   </select>
 
                   <div className="mt-8 flex items-center justify-between">

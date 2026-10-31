@@ -56,9 +56,13 @@ function MasterCard({ m, i }: { m: Master; i: number }) {
           ))}
         </ul>
         <button
-          onClick={() =>
-            openBooking({ masterId: m.id, serviceId: m.service_ids[0] as any })
-          }
+onClick={() =>
+  openBooking({
+    masterId: m.id,
+    serviceId: m.service_ids[0] as any,
+    serviceIds: m.service_ids as any,
+  })
+}
           className="mt-6 w-full rounded-full border border-espresso py-3 text-sm transition-colors hover:bg-espresso hover:text-cream"
         >
           Записатися до майстра
